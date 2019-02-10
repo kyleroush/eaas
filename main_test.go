@@ -14,8 +14,9 @@ func TestHandler(t *testing.T) {
 			"accepts": "text/html",
 		},
 		QueryStringParameters: map[string]string{
-			"to":   "Scott",
-			"from": "kyle",
+			"to":     "Scott",
+			"from":   "kyle",
+			"excuse": "dog",
 		}}
 	expectedResponse := events.APIGatewayProxyResponse{
 		StatusCode: 200,

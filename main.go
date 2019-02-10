@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"text/template"
@@ -11,6 +10,13 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
+
+func listExcuses() map[string]string {
+
+	return map[string]string{
+		"dog": "My dog ate my homework",
+	}
+}
 
 // Message will not be exported but is used several places
 type Message struct {
@@ -22,26 +28,11 @@ type Message struct {
 // Handler is executed by AWS Lambda in the main function. Once the request
 // is processed, it returns an Amazon API Gateway response object to AWS Lambda
 func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	log.Println("Hello World")
-	log.Println(request.Path)
-	type Person struct {
-		FirstName string `json:"firstName"`
-		LastName  string `json:"lastName"`
+
+	if request.QueryStringParameters["excuse"] == "" {
+		return mainPage(request)
 	}
-
-	bytes, err := json.Marshal(Person{
-		FirstName: "John",
-		LastName:  "Dow",
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(string(bytes))
-
-	// if request.Path == "" {
-	// 	return mainPage(request)
-	// }
+	//if key list return all
 
 	// read this from the request header
 
@@ -79,6 +70,8 @@ func excuse(request events.APIGatewayProxyRequest) (string, string, error) {
 		message, err := toJSON(message)
 		return message, "application/json", err
 	}
+	//add plain text
+	//add xml
 	body, err := toHTML(message)
 
 	return body, "text/html", err
@@ -86,12 +79,16 @@ func excuse(request events.APIGatewayProxyRequest) (string, string, error) {
 
 func getMessage(request events.APIGatewayProxyRequest) Message {
 
-	memo := "Myla ate my homework"
+	memo := getMemo(request)
 
 	return Message{
 		From: request.QueryStringParameters["from"],
 		Memo: memo,
 		To:   request.QueryStringParameters["to"]}
+}
+
+func getMemo(request events.APIGatewayProxyRequest) string {
+	return listExcuses()[request.QueryStringParameters["excuse"]]
 }
 
 func mainPage(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
