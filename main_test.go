@@ -13,7 +13,7 @@ func TestHandler(t *testing.T) {
 	expectedResponse := events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Headers: map[string]string{
-			"Content-Type": "text/html",
+			"Content-Type": "text/json",
 		},
 		Body: "Congratulations",
 	}
