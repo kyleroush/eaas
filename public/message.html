@@ -14,9 +14,9 @@
 
         <div class="message">
             <div class="text">
-                <h1>Dear {{.To}},</h1>
-                <h1>{{.Memo}}</h1>
-                <h1>Sincerly {{.From}}</h1>
+                {{if .To}}<p>Dear {{.To}},</p>{{end}}
+                <p>{{.Memo}}</p>
+                {{if .From}}<p>Sincerly {{.From}}</p>{{end}}
             </div>
         </div>
     </div>

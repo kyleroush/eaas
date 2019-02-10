@@ -75,9 +75,9 @@ func excuse(request events.APIGatewayProxyRequest) (string, string, error) {
 
 	message := getMessage(request)
 
-	if request.Headers["accepts"] == "text/json" {
+	if request.Headers["Accept"] == "application/json" {
 		message, err := toJSON(message)
-		return message, "text/json", err
+		return message, "application/json", err
 	}
 	body, err := toHTML(message)
 
