@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"text/template"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -12,8 +14,9 @@ import (
 
 // Message will not be exported but is used several places
 type Message struct {
-	Comment string `json:"comment"`
-	From    string `json:"from"`
+	Memo string `json:"memo"`
+	From string `json:"from"`
+	To   string `json:"to"`
 }
 
 // Handler is executed by AWS Lambda in the main function. Once the request
@@ -53,6 +56,16 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}, err
 }
 
+func toHTML(message Message) (string, error) {
+	t, err := template.ParseFiles("public/message.html") //parse the html file homepage.html
+	if err != nil {                                      // if there is an error
+		log.Print("template parsing error: ", err) // log it
+	}
+	w := bytes.NewBufferString("")
+	err = t.Execute(w, message) //execute the template and pass it the HomePageVars struct to fill in the gaps
+	return w.String(), nil
+}
+
 func toJSON(message Message) (string, error) {
 	response, err := json.Marshal(message)
 	return string(response), err
@@ -60,18 +73,20 @@ func toJSON(message Message) (string, error) {
 
 func excuse(request events.APIGatewayProxyRequest) (string, string, error) {
 
-	// if request.Headers["accepts"] == "text/json" {
-	message, err := toJSON(getMessage())
-	return message, "text/json", err
-	// }
-	// index, err := ioutil.ReadFile("public/index.html")
+	message := getMessage()
 
-	// return string(index), "text/html", err
+	if request.Headers["accepts"] == "text/json" {
+		message, err := toJSON(message)
+		return message, "text/json", err
+	}
+	body, err := toHTML(message)
+
+	return body, "text/html", err
 }
 
 func getMessage() Message {
 
-	return Message{From: "kyles", Comment: "was here"}
+	return Message{From: "kyles", Memo: "was here", To: "Scott"}
 }
 
 func mainPage(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {

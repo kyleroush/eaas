@@ -9,11 +9,13 @@ import (
 
 func TestHandler(t *testing.T) {
 
-	request := events.APIGatewayProxyRequest{}
+	request := events.APIGatewayProxyRequest{Headers: map[string]string{
+		"accepts": "text/html",
+	}}
 	expectedResponse := events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Headers: map[string]string{
-			"Content-Type": "text/json",
+			"Content-Type": "text/html",
 		},
 		Body: "kyle",
 	}
