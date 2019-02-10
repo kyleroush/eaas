@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 
@@ -11,8 +12,8 @@ import (
 
 // Message will not be exported but is used several places
 type Message struct {
-	comment string
-	from    string
+	Comment string `json:"comment"`
+	From    string `json:"from"`
 }
 
 // Handler is executed by AWS Lambda in the main function. Once the request
@@ -20,6 +21,20 @@ type Message struct {
 func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	log.Println("Hello World")
 	log.Println(request.Path)
+	type Person struct {
+		FirstName string `json:"firstName"`
+		LastName  string `json:"lastName"`
+	}
+
+	bytes, err := json.Marshal(Person{
+		FirstName: "John",
+		LastName:  "Dow",
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(bytes))
 
 	// if request.Path == "" {
 	// 	return mainPage(request)
@@ -56,7 +71,7 @@ func excuse(request events.APIGatewayProxyRequest) (string, string, error) {
 
 func getMessage() Message {
 
-	return Message{from: "kyles", comment: "was here"}
+	return Message{From: "kyles", Comment: "was here"}
 }
 
 func mainPage(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
