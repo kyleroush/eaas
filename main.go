@@ -21,9 +21,9 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	log.Println("Hello World")
 	log.Println(request.Path)
 
-	if request.Path == "" {
-		return mainPage(request)
-	}
+	// if request.Path == "" {
+	// 	return mainPage(request)
+	// }
 
 	// read this from the request header
 
@@ -45,13 +45,13 @@ func toJSON(message Message) (string, error) {
 
 func excuse(request events.APIGatewayProxyRequest) (string, string, error) {
 
-	if request.Headers["accepts"] == "text/json" {
-		message, err := toJSON(getMessage())
-		return message, "text/json", err
-	}
-	index, err := ioutil.ReadFile("public/index.html")
+	// if request.Headers["accepts"] == "text/json" {
+	message, err := toJSON(getMessage())
+	return message, "text/json", err
+	// }
+	// index, err := ioutil.ReadFile("public/index.html")
 
-	return string(index), "text/html", err
+	// return string(index), "text/html", err
 }
 
 func getMessage() Message {
