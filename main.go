@@ -9,9 +9,10 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
+// Message will not be exported but is used several places
 type Message struct {
-	comment string `json:"comment"`
-	from    string `json:"from"`
+	comment string
+	from    string
 }
 
 // Handler is executed by AWS Lambda in the main function. Once the request
