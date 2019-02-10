@@ -73,7 +73,7 @@ func toJSON(message Message) (string, error) {
 
 func excuse(request events.APIGatewayProxyRequest) (string, string, error) {
 
-	message := getMessage()
+	message := getMessage(request)
 
 	if request.Headers["accepts"] == "text/json" {
 		message, err := toJSON(message)
@@ -84,9 +84,14 @@ func excuse(request events.APIGatewayProxyRequest) (string, string, error) {
 	return body, "text/html", err
 }
 
-func getMessage() Message {
+func getMessage(request events.APIGatewayProxyRequest) Message {
 
-	return Message{From: "kyles", Memo: "was here", To: "Scott"}
+	memo := "Myla ate my homework"
+
+	return Message{
+		From: request.QueryStringParameters["from"],
+		Memo: memo,
+		To:   request.QueryStringParameters["to"]}
 }
 
 func mainPage(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {

@@ -9,9 +9,14 @@ import (
 
 func TestHandler(t *testing.T) {
 
-	request := events.APIGatewayProxyRequest{Headers: map[string]string{
-		"accepts": "text/html",
-	}}
+	request := events.APIGatewayProxyRequest{
+		Headers: map[string]string{
+			"accepts": "text/html",
+		},
+		QueryStringParameters: map[string]string{
+			"to":   "Scott",
+			"from": "kyle",
+		}}
 	expectedResponse := events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Headers: map[string]string{
