@@ -62,10 +62,23 @@ func toJSON(message Message) (string, error) {
 	return string(response), err
 }
 
+func toSlack(message Message) (string, error) {
+	type SlackResponse struct {
+		Text string `json:"text"`
+	}
+	response, err := json.Marshal(SlackResponse{Text: "Dear " + message.To + ", " + message.Memo + " Sincerly" + message.From})
+	return string(response), err
+}
+
 func excuse(request events.APIGatewayProxyRequest) (string, string, error) {
 
 	message := getMessage(request)
 
+	if request.QueryStringParameters["format"] == "slack" {
+
+		message, err := toSlack(message)
+		return message, "application/json", err
+	}
 	if request.Headers["Accept"] == "application/json" {
 		message, err := toJSON(message)
 		return message, "application/json", err
