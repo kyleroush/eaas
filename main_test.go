@@ -13,10 +13,11 @@ func TestHandler(t *testing.T) {
 		Headers: map[string]string{
 			"accepts": "application/json",
 		},
+		Body: "{\"text\": \"dog,kyle,kyle\"}",
 		QueryStringParameters: map[string]string{
-			"to":     "Scott",
-			"from":   "kyle",
-			"excuse": "dog",
+			// "to":     "Scott",
+			// "from":   "kyle",
+			// "excuse": "dog",
 			"format": "slack",
 		}}
 	expectedResponse := events.APIGatewayProxyResponse{

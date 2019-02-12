@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"strings"
 	"text/template"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -18,6 +19,14 @@ func listExcuses() map[string]string {
 	}
 }
 
+type Input struct {
+	From        string
+	To          string
+	Excuse      string
+	Format      string
+	ContentType string
+}
+
 // Message will not be exported but is used several places
 type Message struct {
 	Memo string `json:"memo"`
@@ -29,14 +38,16 @@ type Message struct {
 // is processed, it returns an Amazon API Gateway response object to AWS Lambda
 func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 
-	if request.QueryStringParameters["excuse"] == "" {
-		return mainPage(request)
-	}
+	// if request.QueryStringParameters["excuse"] == "" {
+	// 	return mainPage(request)
+	// }
 	//if key list return all
 
 	// read this from the request header
 
-	body, contentType, err := excuse(request)
+	input := buildInput(request)
+
+	body, contentType, err := excuse(input)
 
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
@@ -45,6 +56,42 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 			"Content-Type": contentType,
 		},
 	}, err
+}
+
+func buildInput(request events.APIGatewayProxyRequest) Input {
+
+	excuse := request.QueryStringParameters["excuse"]
+	to := request.QueryStringParameters["to"]
+	from := request.QueryStringParameters["from"]
+	contentType := request.Headers["accepts"]
+	format := request.QueryStringParameters["format"]
+	if request.QueryStringParameters["format"] == "slack" {
+
+		type Slack struct {
+			Text     string `json:"text"`
+			UserName string `json:"user_name"`
+		}
+
+		data := &Slack{}
+		json.Unmarshal([]byte(request.Body), data)
+
+		split := strings.Split(data.Text, ",")
+
+		excuse = strings.TrimSpace(split[0])
+		to = strings.TrimSpace(split[1])
+		from = strings.TrimSpace(split[2])
+
+		if from == "" {
+			from = data.UserName
+		}
+	}
+	return Input{
+		From:        from,
+		To:          to,
+		Excuse:      excuse,
+		Format:      format,
+		ContentType: contentType,
+	}
 }
 
 func toHTML(message Message) (string, error) {
@@ -70,18 +117,19 @@ func toSlack(message Message) (string, error) {
 	return string(response), err
 }
 
-func excuse(request events.APIGatewayProxyRequest) (string, string, error) {
+func excuse(request Input) (string, string, error) {
 
 	message := getMessage(request)
 
-	if request.QueryStringParameters["format"] == "slack" {
+	if request.Format == "slack" {
 
-		message, err := toSlack(message)
-		return message, "application/json", err
+		body, err := toSlack(message)
+		return body, "application/json", err
 	}
-	if request.Headers["Accept"] == "application/json" {
-		message, err := toJSON(message)
-		return message, "application/json", err
+
+	if request.ContentType == "application/json" {
+		body, err := toJSON(message)
+		return body, "application/json", err
 	}
 	//add plain text
 	//add xml
@@ -90,18 +138,17 @@ func excuse(request events.APIGatewayProxyRequest) (string, string, error) {
 	return body, "text/html", err
 }
 
-func getMessage(request events.APIGatewayProxyRequest) Message {
+func getMessage(request Input) Message {
 
 	memo := getMemo(request)
-
 	return Message{
-		From: request.QueryStringParameters["from"],
+		From: request.From,
 		Memo: memo,
-		To:   request.QueryStringParameters["to"]}
+		To:   request.To}
 }
 
-func getMemo(request events.APIGatewayProxyRequest) string {
-	return listExcuses()[request.QueryStringParameters["excuse"]]
+func getMemo(request Input) string {
+	return listExcuses()[request.Excuse]
 }
 
 func mainPage(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
