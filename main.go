@@ -19,6 +19,7 @@ func listExcuses() map[string]string {
 	}
 }
 
+//Input are the possible inputs that lambda takes
 type Input struct {
 	From        string
 	To          string
