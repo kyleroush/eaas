@@ -15,7 +15,7 @@ import (
 func listExcuses() map[string]string {
 
 	return map[string]string{
-		"dog": "My dog ate my homework",
+		"dog": "My dog ate my homework.",
 	}
 }
 
@@ -26,6 +26,7 @@ type Input struct {
 	Excuse      string
 	Format      string
 	ContentType string
+	request     events.APIGatewayProxyRequest
 }
 
 // Message will not be exported but is used several places
@@ -79,14 +80,35 @@ func buildInput(request events.APIGatewayProxyRequest) Input {
 
 		// json.Unmarshal([]byte(request.Body), data)
 
-		split := strings.Split(strings.Split(strings.Split(request.Body, "text=")[1], "&")[0], "%2C")
+		pairs := strings.Split(request.Body, "&")
 
-		excuse = strings.TrimSpace(split[0])
-		to = strings.TrimSpace(split[1])
-		from = strings.TrimSpace(split[2])
+		mapped := map[string]string{}
+		for _, element := range pairs {
+			// element is the element from someSlice for where we are
+			pairArray := strings.Split(element, "=")
+			mapped[pairArray[0]] = pairArray[1]
+		}
 
-		if from == "" {
-			// from = data.UserName
+		split := strings.Split(mapped["text"], "%2C")
+
+		if len(split) >= 1 {
+			excuse = strings.TrimSpace(split[0])
+		} else {
+			excuse = "dog"
+		}
+
+		if excuse == "" {
+			excuse = "dog"
+		}
+		if len(split) >= 2 {
+			to = strings.TrimSpace(split[1])
+		} else {
+			to = ""
+		}
+		if len(split) >= 3 {
+			from = strings.TrimSpace(split[2])
+		} else {
+			from = mapped["user_name"]
 		}
 	}
 	return Input{
@@ -95,6 +117,7 @@ func buildInput(request events.APIGatewayProxyRequest) Input {
 		Excuse:      excuse,
 		Format:      format,
 		ContentType: contentType,
+		request:     request,
 	}
 }
 
@@ -117,7 +140,7 @@ func toSlack(message Message) (string, error) {
 	type SlackResponse struct {
 		Text string `json:"text"`
 	}
-	response, err := json.Marshal(SlackResponse{Text: "Dear " + message.To + ", " + message.Memo + " Sincerly" + message.From})
+	response, err := json.Marshal(SlackResponse{Text: "Dear " + message.To + ", " + message.Memo + " Sincerly " + message.From})
 	return string(response), err
 }
 
@@ -126,7 +149,6 @@ func excuse(request Input) (string, string, error) {
 	message := getMessage(request)
 
 	if request.Format == "slack" {
-
 		body, err := toSlack(message)
 		return body, "application/json", err
 	}
