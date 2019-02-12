@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"io/ioutil"
 	"log"
 	"strings"
 	"text/template"
@@ -11,13 +10,6 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
-
-func listExcuses() map[string]string {
-
-	return map[string]string{
-		"dog": "My dog ate my homework.",
-	}
-}
 
 //Input are the possible inputs that lambda takes
 type Input struct {
@@ -34,23 +26,20 @@ type Message struct {
 	Memo string `json:"memo"`
 	From string `json:"from"`
 	To   string `json:"to"`
+	Text string `json:"text"`
 }
 
 // Handler is executed by AWS Lambda in the main function. Once the request
 // is processed, it returns an Amazon API Gateway response object to AWS Lambda
 func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 
-	log.Print(request.Body)
-	// if request.QueryStringParameters["excuse"] == "" {
-	// 	return mainPage(request)
-	// }
-	//if key list return all
-
-	// read this from the request header
-
 	input := buildInput(request)
 
+	// check if there is an error if so error out
+
 	body, contentType, err := excuse(input)
+
+	// check if there is an error if so error out
 
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
@@ -69,16 +58,6 @@ func buildInput(request events.APIGatewayProxyRequest) Input {
 	contentType := request.Headers["accepts"]
 	format := request.QueryStringParameters["format"]
 	if request.QueryStringParameters["format"] == "slack" {
-
-		// type Slack struct {
-		// 	Text     string `:"text"`
-		// 	UserName string `:"user_name"`
-		// }
-
-		// data := &Slack{}
-		// schema.NewDecoder().Decode(data, request.Body)
-
-		// json.Unmarshal([]byte(request.Body), data)
 
 		pairs := strings.Split(request.Body, "&")
 
@@ -121,6 +100,28 @@ func buildInput(request events.APIGatewayProxyRequest) Input {
 	}
 }
 
+func getMessage(request Input) Message {
+
+	memo := getMemo(request)
+
+	text := ""
+	if request.To != "" {
+		text += "Dear " + request.To + ", "
+	}
+	text += memo
+
+	if request.From != "" {
+		text += " Sincerly " + request.From
+	}
+
+	return Message{
+		From: request.From,
+		Memo: memo,
+		To:   request.To,
+		Text: text,
+	}
+}
+
 func toHTML(message Message) (string, error) {
 	t, err := template.ParseFiles("public/message.html") //parse the html file homepage.html
 	if err != nil {                                      // if there is an error
@@ -140,7 +141,8 @@ func toSlack(message Message) (string, error) {
 	type SlackResponse struct {
 		Text string `json:"text"`
 	}
-	response, err := json.Marshal(SlackResponse{Text: "Dear " + message.To + ", " + message.Memo + " Sincerly " + message.From})
+
+	response, err := json.Marshal(SlackResponse{Text: message.Text})
 	return string(response), err
 }
 
@@ -164,32 +166,9 @@ func excuse(request Input) (string, string, error) {
 	return body, "text/html", err
 }
 
-func getMessage(request Input) Message {
-
-	memo := getMemo(request)
-	return Message{
-		From: request.From,
-		Memo: memo,
-		To:   request.To}
-}
-
 func getMemo(request Input) string {
+	// todo do i need to add a check for empty string and throw an error?
 	return listExcuses()[request.Excuse]
-}
-
-func mainPage(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	index, err := ioutil.ReadFile("public/index.html")
-	if err != nil {
-		return events.APIGatewayProxyResponse{}, err
-	}
-
-	return events.APIGatewayProxyResponse{
-		StatusCode: 200,
-		Body:       string(index),
-		Headers: map[string]string{
-			"Content-Type": "text/html",
-		},
-	}, nil
 }
 
 func main() {
