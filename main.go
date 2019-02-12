@@ -69,22 +69,24 @@ func buildInput(request events.APIGatewayProxyRequest) Input {
 	format := request.QueryStringParameters["format"]
 	if request.QueryStringParameters["format"] == "slack" {
 
-		type Slack struct {
-			Text     string `json:"text"`
-			UserName string `json:"user_name"`
-		}
+		// type Slack struct {
+		// 	Text     string `:"text"`
+		// 	UserName string `:"user_name"`
+		// }
 
-		data := &Slack{}
-		json.Unmarshal([]byte(request.Body), data)
+		// data := &Slack{}
+		// schema.NewDecoder().Decode(data, request.Body)
 
-		split := strings.Split(data.Text, ",")
+		// json.Unmarshal([]byte(request.Body), data)
+
+		split := strings.Split(strings.Split(strings.Split(request.Body, "text=")[1], "&")[0], "%2C")
 
 		excuse = strings.TrimSpace(split[0])
 		to = strings.TrimSpace(split[1])
 		from = strings.TrimSpace(split[2])
 
 		if from == "" {
-			from = data.UserName
+			// from = data.UserName
 		}
 	}
 	return Input{
