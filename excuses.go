@@ -25,6 +25,7 @@ type Message struct {
 	Text string `json:"text"`
 }
 
+// Excuse the model of the excuse 
 type Excuse interface {
     getKey() string
     buildMessage() string

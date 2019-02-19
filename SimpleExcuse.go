@@ -1,5 +1,6 @@
 package main
 
+// SimpleExcuse This is a simple excuse where the message is simple string
 type SimpleExcuse struct {
 	key string
 	message string
