@@ -1,7 +1,7 @@
 package main
 
-func listExcuses() map[string]Excuse {
-	excuses := []Excuse{
+func listExcuses() []Excuse {
+	return []Excuse{
 		getDog(),
 		getNotSorry(),
 		getPosion(),
@@ -9,6 +9,9 @@ func listExcuses() map[string]Excuse {
 		getEvicted(),
 		getContagious(),
 	}
+}
+func mapExcuses() map[string]Excuse {
+	excuses := listExcuses()
 
 	mapExcuses := map[string]Excuse {}
 	for _, e := range excuses {

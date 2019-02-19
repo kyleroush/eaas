@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"log"
+	"math/rand"
 	"strings"
 	"text/template"
-
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
@@ -160,8 +160,12 @@ func excuse(request Input) (string, string, error) {
 }
 
 func getMemo(request Input) string {
-	// todo do i need to add a check for empty string and throw an error?
-	return listExcuses()[request.Excuse].buildMessage()
+
+	e := mapExcuses()[request.Excuse]
+	if e == nil {		
+		e = listExcuses()[rand.Intn(len(listExcuses()) -1)]
+	}
+	return e.buildMessage()
 }
 
 func main() {

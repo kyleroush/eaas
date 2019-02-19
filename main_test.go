@@ -126,3 +126,29 @@ func TestBuildInput(t *testing.T) {
 func TestBuildMessage(t *testing.T) {
 
 }
+func TestBadInput(t *testing.T) {
+	request := events.APIGatewayProxyRequest{
+		Headers: map[string]string{
+			"accepts": "application/json",
+		},
+		QueryStringParameters: map[string]string{
+			"to":     "Scott",
+			"from":   "kyle",
+			"excuse": "notReal",
+		}}
+	expectedResponse := events.APIGatewayProxyResponse{
+		StatusCode: 200,
+		Headers: map[string]string{
+			"Content-Type": "application/json",
+		},
+		Body: "kyle",
+	}
+
+	response, err := Handler(request)
+
+	assert.Equal(t, response.Headers, expectedResponse.Headers)
+	assert.Contains(t, response.Body, "Scott")
+	assert.Contains(t, response.Body, "kyle")
+	assert.Equal(t, err, nil)
+}
+
