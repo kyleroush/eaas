@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
+
 //Input are the possible inputs that lambda takes
 type Input struct {
 	From        string
@@ -19,14 +20,6 @@ type Input struct {
 	Format      string
 	ContentType string
 	request     events.APIGatewayProxyRequest
-}
-
-// Message will not be exported but is used several places
-type Message struct {
-	Memo string `json:"memo"`
-	From string `json:"from"`
-	To   string `json:"to"`
-	Text string `json:"text"`
 }
 
 // Handler is executed by AWS Lambda in the main function. Once the request
@@ -168,7 +161,7 @@ func excuse(request Input) (string, string, error) {
 
 func getMemo(request Input) string {
 	// todo do i need to add a check for empty string and throw an error?
-	return listExcuses()[request.Excuse]
+	return listExcuses()[request.Excuse].buildMessage()
 }
 
 func main() {
