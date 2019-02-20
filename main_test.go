@@ -152,3 +152,28 @@ func TestBadInput(t *testing.T) {
 	assert.Equal(t, err, nil)
 }
 
+func TestList(t *testing.T) {
+	request := events.APIGatewayProxyRequest{
+		Headers: map[string]string{
+			"accepts": "application/json",
+		},
+		QueryStringParameters: map[string]string{
+			"format": "list",
+
+		}}
+	expectedResponse := events.APIGatewayProxyResponse{
+		StatusCode: 200,
+		Headers: map[string]string{
+			"Content-Type": "application/json",
+		},
+		Body: "kyle",
+	}
+
+	response, err := Handler(request)
+
+	assert.Equal(t, response.Headers, expectedResponse.Headers)
+	assert.Contains(t, response.Body, "message")
+	assert.Contains(t, response.Body, "key")
+	assert.Equal(t, err, nil)
+}
+

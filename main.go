@@ -141,6 +141,11 @@ func toSlack(message Message) (string, error) {
 
 func excuse(request Input) (string, string, error) {
 
+	if request.Format == "list" {
+		body, err := toList()
+		return body, "application/json", err
+	}
+
 	message := getMessage(request)
 
 	if request.Format == "slack" {
@@ -166,6 +171,27 @@ func getMemo(request Input) string {
 		e = listExcuses()[rand.Intn(len(listExcuses()) -1)]
 	}
 	return e.buildMessage()
+}
+
+func toList() (string, error) {
+	type ListResponse struct {
+		Doc     string `json:"doc"`
+		Key     string `json:"key"`
+		Message string `json:"message"`
+		Params  string `json:"params"`
+	}
+	
+	list := []ListResponse{}
+	for _, e := range listExcuses() {
+		list = append(list, ListResponse{
+			Doc: "Doc",
+			Key: e.getKey(),
+			Message: e.buildMessage(),
+		})
+	}
+
+	response, err := json.Marshal(list)
+	return string(response), err
 }
 
 func main() {
