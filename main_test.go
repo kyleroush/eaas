@@ -25,7 +25,7 @@ func TestHandler(t *testing.T) {
 		Headers: map[string]string{
 			"Content-Type": "application/json",
 			"Access-Control-Allow-Origin": "*",
-			"Access-Control-Allow-Method": "*",
+			"Access-Control-Allow-Method": "GET",
 			"Access-Control-Allow-Header": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
 		},
 		Body: "kyle",
@@ -60,7 +60,7 @@ func TestSlack(t *testing.T) {
 		Headers: map[string]string{
 			"Content-Type": "application/json",
 			"Access-Control-Allow-Origin": "*",
-			"Access-Control-Allow-Method": "*",
+			"Access-Control-Allow-Method": "GET",
 			"Access-Control-Allow-Header": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
 		},
 		Body: "{\"text\":\"Dear ali, My dog ate my homework. Sincerly roush\"}",
@@ -88,7 +88,7 @@ func TestHtml(t *testing.T) {
 		Headers: map[string]string{
 			"Content-Type": "text/html",
 			"Access-Control-Allow-Origin": "*",
-			"Access-Control-Allow-Method": "*",
+			"Access-Control-Allow-Method": "GET",
 			"Access-Control-Allow-Header": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
 		},
 		Body: "kyle",
@@ -117,7 +117,7 @@ func TestJson(t *testing.T) {
 		Headers: map[string]string{
 			"Content-Type": "application/json",
 			"Access-Control-Allow-Origin": "*",
-			"Access-Control-Allow-Method": "*",
+			"Access-Control-Allow-Method": "GET",
 			"Access-Control-Allow-Header": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
 		},
 		Body: "kyle",
@@ -153,7 +153,7 @@ func TestBadInput(t *testing.T) {
 		Headers: map[string]string{
 			"Content-Type": "application/json",
 			"Access-Control-Allow-Origin": "*",
-			"Access-Control-Allow-Method": "*",
+			"Access-Control-Allow-Method": "GET",
 			"Access-Control-Allow-Header": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
 		},
 		Body: "kyle",
@@ -181,7 +181,7 @@ func TestList(t *testing.T) {
 		Headers: map[string]string{
 			"Content-Type": "application/json",
 			"Access-Control-Allow-Origin": "*",
-			"Access-Control-Allow-Method": "*",
+			"Access-Control-Allow-Method": "GET",
 			"Access-Control-Allow-Header": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
 		},
 		Body: "kyle",

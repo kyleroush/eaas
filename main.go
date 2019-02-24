@@ -40,7 +40,7 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		Headers: map[string]string{
 			"Content-Type": contentType,
 			"Access-Control-Allow-Origin": "*",
-			"Access-Control-Allow-Method": "*",
+			"Access-Control-Allow-Method": "GET",
 			"Access-Control-Allow-Header": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
 		},
 	}, err
