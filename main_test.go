@@ -24,13 +24,14 @@ func TestHandler(t *testing.T) {
 		StatusCode: 200,
 		Headers: map[string]string{
 			"Content-Type": "application/json",
+			"Access-Control-Allow-Origin": "*",
 		},
 		Body: "kyle",
 	}
 
 	response, err := Handler(request)
 
-	//assert.Equal(t, response.Headers, expectedResponse.Headers)
+	assert.Equal(t, response.Headers, expectedResponse.Headers)
 	assert.Contains(t, response.Body, expectedResponse.Body)
 	assert.Equal(t, err, nil)
 
@@ -56,13 +57,14 @@ func TestSlack(t *testing.T) {
 		StatusCode: 200,
 		Headers: map[string]string{
 			"Content-Type": "application/json",
+			"Access-Control-Allow-Origin": "*",
 		},
 		Body: "{\"text\":\"Dear ali, My dog ate my homework. Sincerly roush\"}",
 	}
 
 	response, err := Handler(request)
 
-	//assert.Equal(t, response.Headers, expectedResponse.Headers)
+	assert.Equal(t, response.Headers, expectedResponse.Headers)
 	assert.Equal(t, response.Body, expectedResponse.Body)
 	assert.Equal(t, err, nil)
 }
@@ -81,13 +83,14 @@ func TestHtml(t *testing.T) {
 		StatusCode: 200,
 		Headers: map[string]string{
 			"Content-Type": "text/html",
+			"Access-Control-Allow-Origin": "*",
 		},
 		Body: "kyle",
 	}
 
 	response, err := Handler(request)
 
-	//assert.Equal(t, response.Headers, expectedResponse.Headers)
+	assert.Equal(t, response.Headers, expectedResponse.Headers)
 	assert.Contains(t, response.Body, "Scott")
 	assert.Contains(t, response.Body, "Kyle")
 	assert.Equal(t, err, nil)
@@ -107,13 +110,14 @@ func TestJson(t *testing.T) {
 		StatusCode: 200,
 		Headers: map[string]string{
 			"Content-Type": "application/json",
+			"Access-Control-Allow-Origin": "*",
 		},
 		Body: "kyle",
 	}
 
 	response, err := Handler(request)
 
-	//assert.Equal(t, response.Headers, expectedResponse.Headers)
+	assert.Equal(t, response.Headers, expectedResponse.Headers)
 	assert.Contains(t, response.Body, "Scott")
 	assert.Contains(t, response.Body, "kyle")
 	assert.Equal(t, err, nil)
@@ -140,13 +144,14 @@ func TestBadInput(t *testing.T) {
 		StatusCode: 200,
 		Headers: map[string]string{
 			"Content-Type": "application/json",
+			"Access-Control-Allow-Origin": "*",
 		},
 		Body: "kyle",
 	}
 
 	response, err := Handler(request)
 
-	//assert.Equal(t, response.Headers, expectedResponse.Headers)
+	assert.Equal(t, response.Headers, expectedResponse.Headers)
 	assert.Contains(t, response.Body, "Scott")
 	assert.Contains(t, response.Body, "kyle")
 	assert.Equal(t, err, nil)
@@ -165,13 +170,14 @@ func TestList(t *testing.T) {
 		StatusCode: 200,
 		Headers: map[string]string{
 			"Content-Type": "application/json",
+			"Access-Control-Allow-Origin": "*",
 		},
 		Body: "kyle",
 	}
 
 	response, err := Handler(request)
 
-	//assert.Equal(t, response.Headers, expectedResponse.Headers)
+	assert.Equal(t, response.Headers, expectedResponse.Headers)
 	assert.Contains(t, response.Body, "message")
 	assert.Contains(t, response.Body, "key")
 	assert.Equal(t, err, nil)
