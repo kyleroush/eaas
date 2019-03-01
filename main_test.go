@@ -23,12 +23,12 @@ func TestHandler(t *testing.T) {
 	expectedResponse := events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Headers: map[string]string{
-			"Content-Type": "application/json",
+			"Content-Type":                "application/json",
 			"Access-Control-Allow-Origin": "*",
 			"Access-Control-Allow-Method": "GET",
 			"Access-Control-Allow-Header": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
 		},
-		Body: "kyle",
+		Body: "text",
 	}
 
 	response, err := Handler(request)
@@ -39,39 +39,39 @@ func TestHandler(t *testing.T) {
 
 }
 
-func TestSlack(t *testing.T) {
+// func TestSlack(t *testing.T) {
 
-	request := events.APIGatewayProxyRequest{
-		Body: "token=srVPRsp4HXUUjUygIgIjzijA&" +
-			"team_id=T5SM23F44&" +
-			"team_domain=roushhouse&" +
-			"channel_id=D5TDW8G22&" +
-			"channel_name=directmessage&" +
-			"user_id=U5SNE3VGV&" +
-			"user_name=roush&command=%2Fexcuseme&" +
-			"text=dog%2Cali&" +
-			"response_url=https%3A%2F%2Fhooks.slack.com%2Fcommands%2FT5SM23F44%2F548585650213%2FJbblTwNx4vmrqsP8k2XU7ex1&" +
-			"trigger_id=547775724865.196716117140.d19dd8ca00a61df78e29a0b906de53e0",
-		QueryStringParameters: map[string]string{
-			"format": "slack",
-		}}
-	expectedResponse := events.APIGatewayProxyResponse{
-		StatusCode: 200,
-		Headers: map[string]string{
-			"Content-Type": "application/json",
-			"Access-Control-Allow-Origin": "*",
-			"Access-Control-Allow-Method": "GET",
-			"Access-Control-Allow-Header": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
-		},
-		Body: "{\"text\":\"Dear ali, My dog ate my homework. Sincerly roush\"}",
-	}
+// 	request := events.APIGatewayProxyRequest{
+// 		Body: "token=srVPRsp4HXUUjUygIgIjzijA&" +
+// 			"team_id=T5SM23F44&" +
+// 			"team_domain=roushhouse&" +
+// 			"channel_id=D5TDW8G22&" +
+// 			"channel_name=directmessage&" +
+// 			"user_id=U5SNE3VGV&" +
+// 			"user_name=roush&command=%2Fexcuseme&" +
+// 			"text=dog%2Cali&" +
+// 			"response_url=https%3A%2F%2Fhooks.slack.com%2Fcommands%2FT5SM23F44%2F548585650213%2FJbblTwNx4vmrqsP8k2XU7ex1&" +
+// 			"trigger_id=547775724865.196716117140.d19dd8ca00a61df78e29a0b906de53e0",
+// 		QueryStringParameters: map[string]string{
+// 			"format": "slack",
+// 		}}
+// 	expectedResponse := events.APIGatewayProxyResponse{
+// 		StatusCode: 200,
+// 		Headers: map[string]string{
+// 			"Content-Type":                "application/json",
+// 			"Access-Control-Allow-Origin": "*",
+// 			"Access-Control-Allow-Method": "GET",
+// 			"Access-Control-Allow-Header": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
+// 		},
+// 		Body: "{\"text\":\"Dear ali, My dog ate my homework. Sincerly roush\"}",
+// 	}
 
-	response, err := Handler(request)
+// 	response, err := Handler(request)
 
-	assert.Equal(t, response.Headers, expectedResponse.Headers)
-	assert.Equal(t, response.Body, expectedResponse.Body)
-	assert.Equal(t, err, nil)
-}
+// 	assert.Equal(t, response.Headers, expectedResponse.Headers)
+// 	assert.Equal(t, response.Body, expectedResponse.Body)
+// 	assert.Equal(t, err, nil)
+// }
 
 func TestHtml(t *testing.T) {
 	request := events.APIGatewayProxyRequest{
@@ -86,7 +86,7 @@ func TestHtml(t *testing.T) {
 	expectedResponse := events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Headers: map[string]string{
-			"Content-Type": "text/html",
+			"Content-Type":                "text/html",
 			"Access-Control-Allow-Origin": "*",
 			"Access-Control-Allow-Method": "GET",
 			"Access-Control-Allow-Header": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
@@ -115,7 +115,7 @@ func TestJson(t *testing.T) {
 	expectedResponse := events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Headers: map[string]string{
-			"Content-Type": "application/json",
+			"Content-Type":                "application/json",
 			"Access-Control-Allow-Origin": "*",
 			"Access-Control-Allow-Method": "GET",
 			"Access-Control-Allow-Header": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
@@ -151,7 +151,7 @@ func TestBadInput(t *testing.T) {
 	expectedResponse := events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Headers: map[string]string{
-			"Content-Type": "application/json",
+			"Content-Type":                "application/json",
 			"Access-Control-Allow-Origin": "*",
 			"Access-Control-Allow-Method": "GET",
 			"Access-Control-Allow-Header": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
@@ -174,12 +174,11 @@ func TestList(t *testing.T) {
 		},
 		QueryStringParameters: map[string]string{
 			"format": "list",
-
 		}}
 	expectedResponse := events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Headers: map[string]string{
-			"Content-Type": "application/json",
+			"Content-Type":                "application/json",
 			"Access-Control-Allow-Origin": "*",
 			"Access-Control-Allow-Method": "GET",
 			"Access-Control-Allow-Header": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
@@ -194,4 +193,3 @@ func TestList(t *testing.T) {
 	assert.Contains(t, response.Body, "key")
 	assert.Equal(t, err, nil)
 }
-
