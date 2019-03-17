@@ -21,10 +21,24 @@ func (excuse SimpleExcuse) BuildText(request Input) string {
 		message += " Sincerly " + from
 	}
 
-	return excuse.Message
+	return message
 }
 
 // GetKey returns the key of the simple excuse
 func (excuse SimpleExcuse) GetKey() string {
 	return excuse.Key
+}
+
+// GetDoc returns the docs of the simple excuse
+func (excuse SimpleExcuse) GetDoc() string {
+	input := Input{
+		Inputs: map[string]string{
+			"to":   ":to",
+			"from": ":from",
+		},
+	}
+
+	return "Creates a message in the form of " +
+		excuse.BuildText(input) +
+		" with the 'Dear :to,' and 'Sincerly :from' being optional only added when to or from are passed in."
 }

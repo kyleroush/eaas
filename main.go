@@ -158,9 +158,8 @@ func toList() (string, error) {
 	list := []ListResponse{}
 	for _, e := range excuses.ListExcuses() {
 		list = append(list, ListResponse{
-			Doc: "Doc",
+			Doc: e.GetDoc(),
 			Key: e.GetKey(),
-			// Text: e.BuildText(),
 		})
 	}
 

@@ -1,24 +1,28 @@
 package excuses
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/kyleroush/eaas/models"
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_getWelp(t *testing.T) {
-	tests := []struct {
-		name string
-		want models.SimpleExcuse
-	}{
-		// TODO: Add test cases.
+
+	expected := models.SimpleExcuse{
+		Key:     "welp",
+		Message: "Welp I guess I cant make it.",
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := getWelp(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("getWelp() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+
+	actual := getWelp()
+
+	assert.Equal(t, actual.Key, expected.Key)
+	assert.Equal(t, actual.Message, expected.Message)
+}
+
+func Test_MapExcuses_has_welp(t *testing.T) {
+
+	actual := MapExcuses()[getWelp().Key].(models.SimpleExcuse)
+
+	assert.Equal(t, actual, getWelp())
 }
