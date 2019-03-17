@@ -3,10 +3,13 @@ package models
 // Excuse the interface for excuses of the excuse
 type Excuse interface {
 	GetKey() string
-	// GetParams() map[string]string
+	GetParams() []Param
 	GetDoc() string
 	BuildText(request Input) string
 }
 
-// type Param struct {
-// }
+// Param the model to describe the params of an excuse
+type Param struct {
+	Required bool   `json:"required"`
+	Name     string `json:"name"`
+}

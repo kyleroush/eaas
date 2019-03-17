@@ -1,5 +1,8 @@
 package models
 
+const toName = "to"
+const fromName = "from"
+
 // SimpleExcuse This is a simple excuse where the message is simple string
 type SimpleExcuse struct {
 	Key     string
@@ -8,8 +11,8 @@ type SimpleExcuse struct {
 
 // BuildText builds the message of the excuse
 func (excuse SimpleExcuse) BuildText(request Input) string {
-	to := request.Inputs["to"]
-	from := request.Inputs["from"]
+	to := request.Inputs[toName]
+	from := request.Inputs[fromName]
 
 	message := ""
 	if to != "" {
@@ -29,12 +32,27 @@ func (excuse SimpleExcuse) GetKey() string {
 	return excuse.Key
 }
 
+// GetParams returns the map of the params
+func (excuse SimpleExcuse) GetParams() []Param {
+
+	return []Param{
+		Param{
+			Required: false,
+			Name:     toName,
+		},
+		Param{
+			Required: false,
+			Name:     fromName,
+		},
+	}
+}
+
 // GetDoc returns the docs of the simple excuse
 func (excuse SimpleExcuse) GetDoc() string {
 	input := Input{
 		Inputs: map[string]string{
-			"to":   ":to",
-			"from": ":from",
+			toName:   ":" + toName,
+			fromName: ":" + fromName,
 		},
 	}
 

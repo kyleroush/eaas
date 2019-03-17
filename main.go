@@ -149,17 +149,18 @@ func getText(request models.Input) string {
 // toList: builds a string witha json array of all excuses
 func toList() (string, error) {
 	type ListResponse struct {
-		Doc    string `json:"doc"`
-		Key    string `json:"key"`
-		Text   string `json:"text"`
-		Params string `json:"params"`
+		Doc    string         `json:"doc"`
+		Key    string         `json:"key"`
+		Text   string         `json:"text"`
+		Params []models.Param `json:"params"`
 	}
 
 	list := []ListResponse{}
 	for _, e := range excuses.ListExcuses() {
 		list = append(list, ListResponse{
-			Doc: e.GetDoc(),
-			Key: e.GetKey(),
+			Doc:    e.GetDoc(),
+			Key:    e.GetKey(),
+			Params: e.GetParams(),
 		})
 	}
 
