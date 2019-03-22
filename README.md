@@ -16,9 +16,9 @@ Please see [todo] for API documentation and examples.
   - `go get github.com/stretchr/testify`
   - `go get github.com/aws/aws-lambda-go/events`
   - `go get github.com/aws/aws-lambda-go/lambda`
-## Test
-  - go lint
-  - go test
+## Testing
+  - `go lint`
+  - `go test`
 
 # Contributing
 
