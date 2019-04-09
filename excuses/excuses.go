@@ -12,6 +12,7 @@ func ListExcuses() []models.Excuse {
 		getEvicted(),
 		getContagious(),
 		getWelp(),
+		getYoung(),
 	}
 }
 
